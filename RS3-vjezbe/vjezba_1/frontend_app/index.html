@@ -149,6 +149,53 @@
             </div>
         </section>
 
+        <section class="inventory-panel api-panel" id="api">
+            <div class="panel-header">
+                <div>
+                    <h2>Povezivanje s API-jem</h2>
+                    <p>Komunikacija frontend aplikacije s FastAPI backendom na Renderu.</p>
+                </div>
+            </div>
+
+            <div style="padding: 20px;">
+                <p>
+                    <strong>Status API-ja:</strong>
+                    <span id="apiStatus">Provjera još nije pokrenuta.</span>
+                </p>
+
+                <button class="primary-button" id="loadApiButton" type="button">
+                    Dohvati opremu s API-ja
+                </button>
+
+                <p id="apiEquipmentResult" role="status" aria-live="polite">
+                    Klikni gumb za dohvat podataka s backenda.
+                </p>
+
+                <hr style="margin: 20px 0;">
+
+                <label for="apiMessage">
+                    <strong>Poruka za backend</strong>
+                </label>
+
+                <input
+                    id="apiMessage"
+                    type="text"
+                    maxlength="200"
+                    value="Pozdrav s frontend aplikacije!"
+                    style="display: block; width: 100%; margin: 10px 0; padding: 10px;"
+                >
+
+                <button class="primary-button" id="sendApiButton" type="button">
+                    Pošalji POST zahtjev
+                </button>
+
+                <p id="apiPostResult" role="status" aria-live="polite">
+                    Odgovor backenda prikazat će se ovdje.
+                </p>
+            </div>
+        </section>
+
+
         <footer>
             <span>IT Lab · Demo aplikacija</span>
             <span>HTML · CSS · JavaScript</span>

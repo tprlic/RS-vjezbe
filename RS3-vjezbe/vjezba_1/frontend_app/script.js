@@ -423,3 +423,81 @@ $("#resetButton").addEventListener("click", () => {
 });
 
 renderEquipment();
+
+
+const API_BASE_URL = "https://rs-vjezbe-it-api.onrender.com";
+
+const apiStatus = document.querySelector("#apiStatus");
+const loadApiButton = document.querySelector("#loadApiButton");
+const apiEquipmentResult = document.querySelector("#apiEquipmentResult");
+const apiMessage = document.querySelector("#apiMessage");
+const sendApiButton = document.querySelector("#sendApiButton");
+const apiPostResult = document.querySelector("#apiPostResult");
+
+// GET: provjera dostupnosti API-ja i dohvat opreme.
+loadApiButton.addEventListener("click", async () => {
+    loadApiButton.disabled = true;
+    apiStatus.textContent = "Provjeravam vezu...";
+    apiEquipmentResult.textContent = "Dohvaćam podatke...";
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/equipment`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        apiStatus.textContent = "Povezivanje uspješno.";
+        apiEquipmentResult.textContent =
+            `Backend je vratio ${data.count} uređaja: ` +
+            data.equipment.map(item => item.name).join(", ");
+    } catch (error) {
+        console.error("GET zahtjev nije uspio:", error);
+        apiStatus.textContent = "Pogreška pri povezivanju.";
+        apiEquipmentResult.textContent =
+            "Nije moguće dohvatiti opremu. Provjeri dostupnost backenda i CORS postavke.";
+    } finally {
+        loadApiButton.disabled = false;
+    }
+});
+
+// POST: slanje poruke backendu.
+sendApiButton.addEventListener("click", async () => {
+    const message = apiMessage.value.trim();
+
+    if (!message) {
+        apiPostResult.textContent = "Najprije upiši poruku.";
+        return;
+    }
+
+    sendApiButton.disabled = true;
+    apiPostResult.textContent = "Šaljem zahtjev...";
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/echo`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP status ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        apiPostResult.textContent =
+            `Odgovor backenda: ${data.received}. Status: ${data.status}.`;
+    } catch (error) {
+        console.error("POST zahtjev nije uspio:", error);
+        apiPostResult.textContent =
+            "Slanje nije uspjelo. Provjeri dostupnost backenda i CORS postavke.";
+    } finally {
+        sendApiButton.disabled = false;
+    }
+});
+
