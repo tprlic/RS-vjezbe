@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IT Lab - evidencija računalne i mrežne opreme.">
+    <title>IT Lab | Evidencija opreme</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <aside class="sidebar">
+        <a class="brand" href="#" aria-label="IT Lab početna stranica">
+            <span class="brand-icon">IT</span>
+            <span>IT <strong>LAB</strong></span>
+        </a>
+
+        <p class="nav-heading">RADNI PROSTOR</p>
+        <nav>
+            <a class="nav-link active" href="#dashboard">
+                <span>▦</span> Pregled opreme
+            </a>
+            <a class="nav-link" href="#inventory">
+                <span>▤</span> Inventar
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="status-dot"></div>
+            <div>
+                <strong>Lokalna evidencija</strong>
+                <small>Podaci u ovom pregledniku</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">INVENTARSKI SUSTAV / VJEŽBA 1</p>
+                <h1>Evidencija opreme</h1>
+                <p class="subtitle">Pregledaj, pretraži i upravljaj računalnom opremom.</p>
+            </div>
+            <span class="user-avatar" aria-label="IT administrator">IT</span>
+        </header>
+
+        <section class="stats-grid" aria-label="Statistika inventara">
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Ukupno uređaja</span>
+                    <span class="stat-icon blue">▦</span>
+                </div>
+                <p class="stat-value" id="totalCount">0</p>
+                <p class="stat-note">Zapisi u inventaru</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Računala</span>
+                    <span class="stat-icon purple">▣</span>
+                </div>
+                <p class="stat-value" id="computerCount">0</p>
+                <p class="stat-note">Stolna i prijenosna računala</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Mrežna oprema</span>
+                    <span class="stat-icon green">⌘</span>
+                </div>
+                <p class="stat-value" id="networkCount">0</p>
+                <p class="stat-note">Mrežni uređaji</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Ispravni uređaji</span>
+                    <span class="stat-icon orange">✓</span>
+                </div>
+                <p class="stat-value" id="workingCount">0</p>
+                <p class="stat-note">Status: ispravno</p>
+            </article>
+        </section>
+
+        <section class="inventory-panel" id="inventory">
+            <div class="panel-header">
+                <div>
+                    <h2>Popis opreme</h2>
+                    <p>Upravljanje inventarskim zapisima</p>
+                </div>
+                <button class="primary-button" id="addButton" type="button">
+                    <span>＋</span> Dodaj opremu
+                </button>
+            </div>
+
+            <div class="toolbar">
+                <label class="search-box">
+                    <span aria-hidden="true">⌕</span>
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Pretraži naziv, inventarski broj..."
+                        aria-label="Pretraži opremu">
+                </label>
+
+                <label class="filter-box">
+                    <span class="sr-only">Filtriraj prema kategoriji</span>
+                    <select id="categoryFilter">
+                        <option value="Sve">Sve kategorije</option>
+                        <option value="Računalo">Računalo</option>
+                        <option value="Mrežna oprema">Mrežna oprema</option>
+                        <option value="Periferija">Periferija</option>
+                    </select>
+                </label>
+
+                <label class="filter-box">
+                    <span class="sr-only">Filtriraj prema statusu</span>
+                    <select id="statusFilter">
+                        <option value="Sve">Svi statusi</option>
+                        <option value="Ispravno">Ispravno</option>
+                        <option value="Na servisu">Na servisu</option>
+                        <option value="Neispravno">Neispravno</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>UREĐAJ</th>
+                            <th>INVENTARSKI BROJ</th>
+                            <th>KATEGORIJA</th>
+                            <th>LOKACIJA</th>
+                            <th>STATUS</th>
+                            <th class="actions-heading">AKCIJE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipmentTable"></tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <span id="resultCount">Prikazano 0 uređaja</span>
+                <button class="text-button" id="resetButton" type="button">
+                    Vrati početne podatke
+                </button>
+            </div>
+        </section>
+
+        <footer>
+            <span>IT Lab · Demo aplikacija</span>
+            <span>HTML · CSS · JavaScript</span>
+        </footer>
+    </main>
+
+    <dialog id="equipmentDialog">
+        <form id="equipmentForm">
+            <div class="dialog-header">
+                <div>
+                    <p class="eyebrow">INVENTAR</p>
+                    <h2 id="dialogTitle">Dodaj opremu</h2>
+                </div>
+                <button class="close-button" id="closeDialog" type="button"
+                        aria-label="Zatvori obrazac">×</button>
+            </div>
+
+            <input type="hidden" id="editId">
+
+            <label for="equipmentName">Naziv uređaja</label>
+            <input id="equipmentName" name="equipmentName" type="text"
+                   placeholder="Npr. Dell OptiPlex 7010" maxlength="80" required>
+
+            <label for="inventoryNumber">Inventarski broj</label>
+            <input id="inventoryNumber" name="inventoryNumber" type="text"
+                   placeholder="Npr. RAC-006" maxlength="30" required>
+
+            <label for="equipmentCategory">Kategorija</label>
+            <select id="equipmentCategory" name="equipmentCategory" required>
+                <option value="Računalo">Računalo</option>
+                <option value="Mrežna oprema">Mrežna oprema</option>
+                <option value="Periferija">Periferija</option>
+            </select>
+
+            <label for="equipmentLocation">Lokacija</label>
+            <input id="equipmentLocation" name="equipmentLocation" type="text"
+                   placeholder="Npr. Učionica 12" maxlength="80" required>
+
+            <label for="equipmentStatus">Status uređaja</label>
+            <select id="equipmentStatus" name="equipmentStatus" required>
+                <option value="Ispravno">Ispravno</option>
+                <option value="Na servisu">Na servisu</option>
+                <option value="Neispravno">Neispravno</option>
+            </select>
+
+            <p class="form-error" id="formError" role="alert"></p>
+
+            <div class="dialog-actions">
+                <button class="secondary-button" id="cancelButton" type="button">
+                    Odustani
+                </button>
+                <button class="primary-button" type="submit">
+                    Spremi uređaj
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
